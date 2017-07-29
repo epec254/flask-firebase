@@ -6,8 +6,8 @@ from cryptography.hazmat.backends import default_backend
 from flask import Blueprint, abort, current_app, redirect, request, \
     render_template, url_for
 from threading import Lock
-from time import monotonic
-from urllib.parse import urlparse
+from monotonic import monotonic
+import urlparse
 from werkzeug.http import parse_cache_control_header
 
 
