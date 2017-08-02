@@ -1,18 +1,12 @@
-import jwt
-import requests
-
-from cryptography.x509 import load_pem_x509_certificate
-from cryptography.hazmat.backends import default_backend
 from flask import Blueprint, abort, current_app, redirect, request, \
     render_template, url_for
-from threading import Lock
-from monotonic import monotonic
 import urlparse
-from werkzeug.http import parse_cache_control_header
-
+import google.oauth2.id_token
+import google.auth.transport.requests
+import requests
+HTTP_REQUEST = google.auth.transport.requests.Request()
 
 blueprint = Blueprint('firebase_auth', __name__, template_folder='templates')
-
 
 @blueprint.route('/widget', methods={'GET', 'POST'})
 def widget():
@@ -54,7 +48,7 @@ class FirebaseAuth:
         self.keys = {}
         self.max_age = 0
         self.cached_at = 0
-        self.lock = Lock()
+        # self.lock = Lock()
         if app is not None:
             self.init_app(app)
 
@@ -92,8 +86,8 @@ class FirebaseAuth:
         else:
             return url_for(
                 full_endpoint,
-                _external=True,
-                _scheme='https',
+                # _external=True,
+                # _scheme='https',
                 **values)
 
     def widget(self):
@@ -111,16 +105,16 @@ class FirebaseAuth:
 
     def sign_in(self):
         assert not self.debug
-        header = jwt.get_unverified_header(request.data)
-        with self.lock:
-            self.refresh_keys()
-            key = self.keys[header['kid']]
-        token = jwt.decode(
-            request.data,
-            key=key,
-            audience=self.project_id,
-            algorithms=['RS256'])
-        self.production_load_callback(token)
+
+        # Verify Firebase auth.
+        id_token = request.headers['Authorization'].split(' ').pop()
+        claims = google.oauth2.id_token.verify_firebase_token(
+            id_token, HTTP_REQUEST)
+        if not claims:
+            raise Exception('Authentication failed')
+
+        # have the token, return it
+        self.production_load_callback(claims)
         return 'OK'
 
     def sign_out(self):
@@ -136,20 +130,3 @@ class FirebaseAuth:
             if not url.netloc.endswith(self.server_name):
                 abort(400)
         return next_
-
-    def refresh_keys(self):
-        now = monotonic()
-        age = now - self.cached_at
-        if age >= self.max_age:
-            response = requests.get(self.KEYCHAIN_URL)
-            if response.status_code != 200:
-                raise Exception
-            hazmat = default_backend()
-            for kid, text in response.json().items():
-                certificate = load_pem_x509_certificate(
-                    bytes(text, 'utf-8'),
-                    hazmat)
-                self.keys[kid] = certificate.public_key()
-            cache_control = response.headers['Cache-Control']
-            self.max_age = parse_cache_control_header(cache_control).max_age
-            self.cached_at = now
