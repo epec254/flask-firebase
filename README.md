@@ -1,5 +1,9 @@
 # Flask-Firebase
 
+This module has been updated to work with the latest version of the FirebaseUI code provided by Google.  It simplifies the process of passing the login token back to the Flask application (rather than using JWT, it simply passes the idToken, similar to how the Google provided FireNotes example works: https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/appengine/standard/firebase/firenotes).
+This has been tested on Python 2.7
+
+Original docs:
 Google Firebase integration for Flask. At this moment,
 only the authentication subsystem is supported.
 
