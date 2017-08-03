@@ -12,7 +12,7 @@ depends on the `Flask.debug` variable.
 
 - `FIREBASE_API_KEY`: The API key.
 - `FIREBASE_PROJECT_ID`: The project identifier, eg. `foobar`.
-- `FIREBASE_AUTH_SIGN_IN_OPTIONS`: Comma-separated list of enabled providers (can be any of: google,email,facebook,github,twitter)
+- `FIREBASE_AUTH_SIGN_IN_OPTIONS`: Comma-separated list of enabled providers (see list below)
 - `FIREBASE_BASE_TEMPLATE`: What is the base Djina template the authentication widget should be enclosed in
 
 ## Providers
@@ -25,7 +25,7 @@ depends on the `Flask.debug` variable.
 
 ## Example
 
-1. Inside your Flask application's folder, create a file called `auth.py` with the following code:
+1. Inside your Flask application's folder, create a file called `auth.py` with the following code.  This file links the Firebase authentication token in with the flask_login module.
 
 ```python
 from flask import Flask, current_app
@@ -88,7 +88,7 @@ def authentication_required():
     return redirect(auth.url_for('widget', mode='select', next=request.url))
 ```
 
-2. Inside your Flask application's folder, create a file called `model_account.py` with the following code: 
+2. Inside your Flask application's folder, create a file called `model_account.py` with the following code.  This provides a SQLAlchemy table to store account information.  Seperatly, you'll need to configure SQL Alchemy in your app and run this script to create the initial table.
 
 ```python
 from flask import Flask
