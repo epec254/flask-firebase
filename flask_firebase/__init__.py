@@ -25,8 +25,6 @@ def sign_out():
 
 class FirebaseAuth:
 
-    KEYCHAIN_URL = 'https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com'  # noqa
-
     PROVIDER_CLASSES = {
         'email': 'EmailAuthProvider',
         'facebook': 'FacebookAuthProvider',
