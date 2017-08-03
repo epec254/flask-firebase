@@ -19,6 +19,7 @@
   ui.start("#firebaseui-auth-container", {
       queryParameterForSignInSuccessUrl: "next",
       signInOptions: [{{ firebase_auth.provider_ids }}],
+      credentialHelper: firebaseui.auth.CredentialHelper.NONE,
       callbacks: {
         signInSuccess: function(user, credential, redirectUrl) {
 
