@@ -167,11 +167,13 @@ if __name__ == '__main__':
 
 ```python
 def create_app(config, debug=False, testing=False, config_overrides=None):
-	#create account model
-	from . import model_account
-	        model_account.init_app(app)
-			
+    #YOUR OTHER CODE
+    #create account model
+    from . import model_account
+            model_account.init_app(app)
+
     #Include authentication code
     from . import auth
     auth.init_app(app)
+    #YOUR OTHER CODE
 ```
