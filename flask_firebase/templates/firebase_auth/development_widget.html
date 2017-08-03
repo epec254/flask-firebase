@@ -1,9 +1,6 @@
-<!DOCTYPE html>
-<html>
-<body>
+{% extends firebase_auth.base_template %} {% block content %}
 <form action="" method="POST">
   Email: <input type="text" name="email" />
   <input type="submit" value="Sign in" />
 </form>
-</body>
-</html>
+{% endblock %}

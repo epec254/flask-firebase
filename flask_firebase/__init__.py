@@ -58,6 +58,7 @@ class FirebaseAuth:
         self.api_key = app.config['FIREBASE_API_KEY']
         self.project_id = app.config['FIREBASE_PROJECT_ID']
         self.server_name = app.config['SERVER_NAME']
+        self.base_template = app.config['FIREBASE_BASE_TEMPLATE']
         provider_ids = []
         for name in app.config['FIREBASE_AUTH_SIGN_IN_OPTIONS'].split(','):
             class_name = self.PROVIDER_CLASSES[name.strip()]
